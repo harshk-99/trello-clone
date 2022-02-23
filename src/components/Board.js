@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 const Board = () => {
+  const cms = "https://trello-cms.herokuapp.com/api/task";
   const [ideas, setIdeas] = useState([]);
   const [todo, setTodo] = useState([]);
   const [inProgress, setInProgress] = useState([]);
@@ -11,11 +12,11 @@ const Board = () => {
   const [newTask, setNewTask] = useState("");
 
   const addTask = async () => {
-    const task = await axios.get("http://localhost:1337/api/task");
+    const task = await axios.get(cms);
     const ideas = task.data.data.attributes.idea;
 
     await axios
-      .put("http://localhost:1337/api/task", {
+      .put(cms, {
         data: { idea: [...ideas, newTask] },
       })
       .catch((err) => {
@@ -26,7 +27,7 @@ const Board = () => {
   };
 
   const getTasks = async () => {
-    let tasks = await axios.get("http://localhost:1337/api/task");
+    let tasks = await axios.get(cms);
     // For todos
     let todos = tasks.data.data.attributes.todo;
     setTodo(todos);
@@ -48,7 +49,7 @@ const Board = () => {
     const publishedNew = published.map((el) => String(el));
 
     await axios
-      .put("http://localhost:1337/api/task", {
+      .put(cms, {
         data: {
           idea: [...ideasNew].flat(),
           todo: [...todosNew].flat(),
